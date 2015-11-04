@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothProfile;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -17,11 +18,11 @@ import com.unity3d.player.UnityPlayer;
  */
 public class MyBluetoothGattCallback extends BluetoothGattCallback
 {
-    public Service service;
+    public Context service;
     private BluetoothGattObject gatt;
     public String TAG = "MyBluetoothGattCallback";
 
-    public MyBluetoothGattCallback(Service service,BluetoothGattObject obj)
+    public MyBluetoothGattCallback(Context service,BluetoothGattObject obj)
     {
         this.service= service;
         this.gatt = obj;
@@ -135,7 +136,8 @@ public class MyBluetoothGattCallback extends BluetoothGattCallback
         {
             Log.e("onCharacteristicChanged","UUID_PRESSURE_SENSOR_MEASUREMENT");
             final Intent intent = new Intent(SampleGattAttributes.ACTION_FIRST_PRESSURE_SENSOR_DATA);
-            intent.putExtra(SampleGattAttributes.EXTRA_DATA, stringBuilder.toString());
+            String[] strings= {gatt.getDevice().getAddress(),stringBuilder.toString()};
+            intent.putExtra(SampleGattAttributes.EXTRA_DATA, strings);
             service.sendBroadcast(intent);
 
         }
@@ -148,7 +150,8 @@ public class MyBluetoothGattCallback extends BluetoothGattCallback
         else if (action.equals(SampleGattAttributes.ACTION_DATA_AVAILABLE))
         {
             final Intent intent = new Intent(SampleGattAttributes.ACTION_DATA_AVAILABLE);
-            intent.putExtra(SampleGattAttributes.EXTRA_DATA, stringBuilder.toString());
+            
+            intent.putExtra(SampleGattAttributes.EXTRA_DATA,stringBuilder.toString());
             service.sendBroadcast(intent);
         }
     }

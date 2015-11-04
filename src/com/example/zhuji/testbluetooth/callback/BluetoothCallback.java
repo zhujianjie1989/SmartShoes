@@ -1,5 +1,9 @@
 package com.example.zhuji.testbluetooth.callback;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.util.Log;
@@ -14,12 +18,16 @@ public class BluetoothCallback implements BluetoothAdapter.LeScanCallback {
         Log.e(TAG, "name = " + device.getName() + " address =  " + device.getAddress());
         //78:C5:E5:6E:D1:0C
         if (device.getName().equals("BLE SHOES")) {
-            this.device = device;
+/*        	if (this.device.size() >0) {
+				return;
+			}*/
+            this.device.put(device.getAddress(), device);
         }
     }
-    BluetoothDevice device = null;
+    //BluetoothDevice 
+    Map<String,BluetoothDevice>device = new HashMap<>();
 
-    public BluetoothDevice getBluetoothDevice(){
+    public Map<String,BluetoothDevice> getBluetoothDevice(){
         return  device;
     }
 }
