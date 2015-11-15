@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.example.zhuji.testbluetooth.util.SampleGattAttributes;
@@ -33,7 +34,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver{
 		
 	}
     
-    public Socket socket ;
+   /* public Socket socket ;
     PrintWriter os;
     public void initSocket() 
     {
@@ -45,10 +46,8 @@ public class MyBroadcastReceiver extends BroadcastReceiver{
 					socket=new Socket("192.168.0.109",8900);
 					os=new PrintWriter(socket.getOutputStream());	
 				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			   
@@ -57,36 +56,60 @@ public class MyBroadcastReceiver extends BroadcastReceiver{
 		}).start();
 	    
     }
-
+*/
    
     @Override
     public void onReceive(Context context, Intent intent)
     {
         final String action = intent.getAction();
-        if (SampleGattAttributes.ACTION_GATT_FIRST_CONNECTED.equals(action))
+        if (SampleGattAttributes.ACTION_GATT_CONNECTED.equals(action))
         {
+        	displayConnectStatus(intent.getStringArrayExtra(SampleGattAttributes.EXTRA_DATA));
             mConnected = true;
         }
-        else if (SampleGattAttributes.ACTION_GATT_FIRST_DISCONNECTED.equals(action))
+        else if (SampleGattAttributes.ACTION_GATT_DISCONNECTED.equals(action))
         {
+        	displayConnectStatus(intent.getStringArrayExtra(SampleGattAttributes.EXTRA_DATA));
             mConnected = false;
         }
-        else if (SampleGattAttributes.ACTION_GATT_FIRST_SERVICES_DISCOVERED.equals(action))
+        else if (SampleGattAttributes.ACTION_GATT_SERVICES_DISCOVERED.equals(action))
         {
-           // displayGattServices(mBluetoothLeService.getSupportedGattServices(callback.getBluetoothDevice()));
+        	displayConnectStatus(intent.getStringArrayExtra(SampleGattAttributes.EXTRA_DATA));
         }
-        else if (SampleGattAttributes.ACTION_FIRST_PRESSURE_SENSOR_DATA.equals(action))
+        else if (SampleGattAttributes.ACTION_GATT_PRESSURE_SENSOR_DATA.equals(action))
         {
             displayPressureSensorData(intent.getStringArrayExtra(SampleGattAttributes.EXTRA_DATA));
         }
-        else if (SampleGattAttributes.ACTION_FIRST_POWER_DATA.equals(action))
+        else if (SampleGattAttributes.ACTION_POWER_DATA.equals(action))
         {
-            displayPowerData(intent.getStringExtra(SampleGattAttributes.EXTRA_DATA));
+            displayPowerData(intent.getStringArrayExtra(SampleGattAttributes.EXTRA_DATA));
         }
         else if (SampleGattAttributes.ACTION_DATA_AVAILABLE.equals(action))
         {
             displayData(intent.getStringExtra(SampleGattAttributes.EXTRA_DATA));
         }
+    }
+    
+    private Map<String,String> senserStatusMap = new HashMap<String, String>();
+    public void displayConnectStatus(String [] data)
+    {
+    	if(data == null )
+    		return;
+    	
+    	senserStatusMap.put(data[0], data[1]);
+    	 Iterator<String> keys = senserStatusMap.keySet().iterator();
+         String arg = "";
+         while(keys.hasNext())
+         {
+         	String key = keys.next();
+         	String status = senserStatusMap.get(key);
+         	arg += Util.getSideByMac(key) +":"+status+"  ";
+         }
+         
+         Message msg = new Message();
+       	 msg.arg1=4;
+         msg.obj=arg;
+     	 handler.sendMessage(msg);
     }
 
     private void displayData(String data)
@@ -98,9 +121,11 @@ public class MyBroadcastReceiver extends BroadcastReceiver{
     }
     
     
-    private Map<String, int[]> sensorDataMap = new HashMap<>();
-    private Map<String, status> sensorStatuMap = new HashMap<>();
-
+    private Map<String, int[]> sensorDataMap = new HashMap<String, int[]>();
+    private Map<String, status> sensorStatuMap = new HashMap<String, status>();
+    public int step_count =0;
+    public enum status{STEP_DOWN,STEP_UP};
+    
     private void displayPressureSensorData(String[] data) {
         String subdata;
         int iValue;
@@ -160,38 +185,10 @@ public class MyBroadcastReceiver extends BroadcastReceiver{
             }
             
             
-           
-            /*if (sensorData[0]< threadhold ) {
-            	//sensorData[0] = 0;
-			}
-            else
-            {
-            	sensorData[0] = 2048;
-            }
-            
-            if (sensorData[1]< threadhold ) {
-            	//sensorData[1] = 0;
-			}
-            else
-            {
-            	sensorData[1] = 2048;
-            }
-            if (sensorData[2]< threadhold ) {
-            	//sensorData[2] = 0;
-			}
-            else
-            {
-            	sensorData[2] = 2048;
-            }
-            if (sensorData[3]< threadhold ) {
-            	//sensorData[3] = 0;
-			}else
-            {
-            	sensorData[3] = 2048;
-            }*/
-            int threadhold= 1600;
-            if (sensorData[0]> threadhold && sensorData[1]> threadhold
-            		&&sensorData[2]> threadhold
+            int maxthreadhold= 1500;
+            int minthreadhold= 500;
+            if (sensorData[0]> maxthreadhold && sensorData[1]> maxthreadhold
+            		&&sensorData[2]> maxthreadhold
             		//&&sensorData[3]> threadhold
             		&& statu == status.STEP_UP) {
             	step_count++;
@@ -200,12 +197,13 @@ public class MyBroadcastReceiver extends BroadcastReceiver{
             	 Message msg = new Message();
             	 msg.arg1=1;
             	 msg.arg2=step_count;
+            	 msg.obj=Util.getSideByMac(data[0]);
             	 handler.sendMessage(msg);
             	 Log.e("step_count",step_count+"");
 			}
             
-            else if (sensorData[0]==0 && sensorData[1]==0
-            		&&sensorData[2]==0&&sensorData[3]==0
+            else if (sensorData[0]<minthreadhold && sensorData[1]<minthreadhold
+            		&&sensorData[2]<minthreadhold&&sensorData[3]<minthreadhold
             		&& statu == status.STEP_DOWN) {
 
             	statu = status.STEP_UP;
@@ -214,38 +212,64 @@ public class MyBroadcastReceiver extends BroadcastReceiver{
             
             sensorStatuMap.put(data[0],  statu);
             
-           /* new Thread(new Runnable() {
-				
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					os.write( sensorData[0]+ "  " + sensorData[1]+"  " + sensorData[2]+"   " + sensorData[3]);
-		            os.flush();
-				}
-			}).start();*/
+            Iterator<String> keys = sensorDataMap.keySet().iterator();
+            String arg = "";
+            while(keys.hasNext())
+            {
+            	String key = keys.next();
+            	
+            	int [] sdata = sensorDataMap.get(key);
+            	arg += Util.getSideByMac(key) +":"+"up = " + sdata[0]+ " left = " + sdata[1]+" right = " + sdata[2]+" back = " + sdata[3] +"\n";
+            }
             
-            Log.e("step_count", "up = " + sensorData[0]+ "left = " + sensorData[1]+"right = " + sensorData[2]+" back = " + sensorData[3]);
+            
+            Message msg = new Message();
+	       	msg.arg1=5;
+	        msg.obj=arg;
+	       	handler.sendMessage(msg);
+           
         }
         
     }
-    public int step_count =0;
-   
-    public enum status{STEP_DOWN,STEP_UP};
+ 
 
-    private void displayPowerData(String data)
+    private Map<String,Integer> senserPowerDataMap = new HashMap<String, Integer>();
+    private void displayPowerData(String[] data)
     {
         String subdata;
 
         int iValue;
         if (data != null)
         {
-            subdata = data.substring(3,5)+ data.substring(0,2);
+            subdata = data[1].substring(3,5)+ data[1].substring(0,2);
 
             iValue = Integer.parseInt(subdata, 16);
             Log.e("displayPowerData",String.valueOf((double) iValue / 4095 * 1.25 / 3.9 * 13.9)+" V");
-            subdata = data.substring(9,11)+data.substring(6,8);
+            subdata = data[1].substring(9,11)+data[1].substring(6,8);
             iValue = Integer.parseInt(subdata, 16);
+            senserPowerDataMap.put(data[0], iValue);
             Log.e("displayPowerData", "&&&&& mVoltageData" + iValue);
+            
+            
+            Iterator<String> keys = senserPowerDataMap.keySet().iterator();
+            String arg = "";
+            while(keys.hasNext())
+            {
+            	String key = keys.next();
+            	double powerData = 0;
+            	if (iValue>900)
+            		powerData= (double)senserPowerDataMap.get(key)  / 4095 * 1.25 / 3.0 * 13.0 ;
+            	
+            	
+            	arg += Util.getSideByMac(key) +":"+String.format("%.4f", powerData)+"  V";
+            }
+            
+            Message msg = new Message();
+	       	msg.arg1=3;
+	        msg.obj=arg;
+	     	handler.sendMessage(msg);
+	     	
+	     	
             if (iValue<1000)
                 Log.e("displayPowerData", "0.0000 V");
             else

@@ -24,14 +24,14 @@ public class BluetoothScanThread extends Thread {
 	{
 		this.context = context;
 		this.handler = handler;
-		bluetoothCallback = new BluetoothCallback();
+		bluetoothCallback = new BluetoothCallback(context);
 		initBluetooth();
 	}
 
 	@Override
 	public void run() 
 	{
-		while (bluetoothCallback.getBluetoothDevice().size() < 1) 
+		while (bluetoothCallback.isStop()) 
 		{
 			try 
 			{
@@ -53,8 +53,19 @@ public class BluetoothScanThread extends Thread {
 			
 		}
 		
-		((MainActivity)context).process();
+		//((MainActivity)context).process();
 		 
+	}
+	
+	public void setScanList(String leftMac,String rightMac)
+	{
+		if (leftMac!=null) {
+			bluetoothCallback.setScanList("LEFT", leftMac);
+		}
+		if (rightMac!=null) {
+			bluetoothCallback.setScanList("RIGHT", rightMac);
+		}
+		
 	}
 	
 	 private void initBluetooth()
@@ -74,6 +85,11 @@ public class BluetoothScanThread extends Thread {
 	 public Map<String, BluetoothDevice> getBluetoothDevice()
 	 {
 		 return bluetoothCallback.getBluetoothDevice();
+	 }
+	 
+	 public String getSideMac(String side)
+	 {
+		 return bluetoothCallback.getSideMac(side);
 	 }
 
 }

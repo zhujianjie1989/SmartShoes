@@ -1,5 +1,8 @@
 package com.example.zhuji.testbluetooth.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.unity3d.player.UnityPlayer;
 
 import android.content.IntentFilter;
@@ -11,12 +14,12 @@ public class Util {
 
 	public static IntentFilter makeGattUpdateIntentFilter() {
 		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(SampleGattAttributes.ACTION_GATT_FIRST_CONNECTED);
-		intentFilter.addAction(SampleGattAttributes.ACTION_GATT_FIRST_DISCONNECTED);
-		intentFilter.addAction(SampleGattAttributes.ACTION_GATT_FIRST_SERVICES_DISCOVERED);
+		intentFilter.addAction(SampleGattAttributes.ACTION_GATT_CONNECTED);
+		intentFilter.addAction(SampleGattAttributes.ACTION_GATT_DISCONNECTED);
+		intentFilter.addAction(SampleGattAttributes.ACTION_GATT_SERVICES_DISCOVERED);
 		intentFilter.addAction(SampleGattAttributes.ACTION_DATA_AVAILABLE);
-		intentFilter.addAction(SampleGattAttributes.ACTION_FIRST_PRESSURE_SENSOR_DATA);
-		intentFilter.addAction(SampleGattAttributes.ACTION_FIRST_POWER_DATA);
+		intentFilter.addAction(SampleGattAttributes.ACTION_GATT_PRESSURE_SENSOR_DATA);
+		intentFilter.addAction(SampleGattAttributes.ACTION_POWER_DATA);
 		return intentFilter;
 	}
 	
@@ -46,6 +49,20 @@ public class Util {
 	public static void BLESHOES_UpdateClick(String msg){
 		//click_msg = msg;
 		reflactCall("BLESHOES_UpdateClick",msg);
+	}
+	
+	public static Map<String,String> scanlist = new HashMap<String,String>();
+	public static void setScanlist(String left,String right)
+	{
+		scanlist.put("LEFT", left);
+    	scanlist.put("RIGHT", right);
+    	scanlist.put( left,"LEFT");
+    	scanlist.put(right,"RIGHT" );
+	}
+	
+	public static String getSideByMac(String side)
+	{
+		return scanlist.get(side);
 	}
 
 }

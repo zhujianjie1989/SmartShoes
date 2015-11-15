@@ -28,24 +28,24 @@ public class SampleGattAttributes {
 
     public final static String ACTION_DATA_AVAILABLE    = "com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
     public final static String ACTION_POWER_DATA  = "com.example.bluetooth.le.ACTION_POWER_DATA";
-    public final static String ACTION_FIRST_POWER_DATA  = "com.example.bluetooth.le.ACTION_FIRST_POWER_DATA";
-    public final static String ACTION_SECOND_POWER_DATA = "com.example.bluetooth.le.ACTION_SECOND_POWER_DATA";
+    //public final static String ACTION_FIRST_POWER_DATA  = "com.example.bluetooth.le.ACTION_FIRST_POWER_DATA";
+    //public final static String ACTION_SECOND_POWER_DATA = "com.example.bluetooth.le.ACTION_SECOND_POWER_DATA";
 
     public final static String ACTION_GATT_CONNECTED  = "com.example.bluetooth.le.ACTION_GATT_CONNECTED";
-    public final static String ACTION_GATT_FIRST_CONNECTED  = "com.example.bluetooth.le.ACTION_GATT_FIRST_CONNECTED";
-    public final static String ACTION_GATT_SECOND_CONNECTED = "com.example.bluetooth.le.ACTION_GATT_SECOND_CONNECTED";
+    //public final static String ACTION_GATT_FIRST_CONNECTED  = "com.example.bluetooth.le.ACTION_GATT_FIRST_CONNECTED";
+    //public final static String ACTION_GATT_SECOND_CONNECTED = "com.example.bluetooth.le.ACTION_GATT_SECOND_CONNECTED";
 
     public final static String ACTION_GATT_DISCONNECTED  = "com.example.bluetooth.le.ACTION_GATT_DISCONNECTED";
-    public final static String ACTION_GATT_FIRST_DISCONNECTED   = "com.example.bluetooth.le.ACTION_GATT_FIRST_DISCONNECTED";
-    public final static String ACTION_GATT_SECOND_DISCONNECTED  = "com.example.bluetooth.le.ACTION_GATT_SECOND_DISCONNECTED";
+    //public final static String ACTION_GATT_FIRST_DISCONNECTED   = "com.example.bluetooth.le.ACTION_GATT_FIRST_DISCONNECTED";
+    //public final static String ACTION_GATT_SECOND_DISCONNECTED  = "com.example.bluetooth.le.ACTION_GATT_SECOND_DISCONNECTED";
 
     public final static String ACTION_GATT_PRESSURE_SENSOR_DATA  = "com.example.bluetooth.le.ACTION_GATT_PRESSURE_SENSOR_DATA";
-    public final static String ACTION_FIRST_PRESSURE_SENSOR_DATA  =  "com.example.bluetooth.le.ACTION_FIRST_PRESSURE_SENSOR_DATA";
-    public final static String ACTION_SECOND_PRESSURE_SENSOR_DATA = "com.example.bluetooth.le.ACTION_SECOND_PRESSURE_SENSOR_DATA";
+    //public final static String ACTION_FIRST_PRESSURE_SENSOR_DATA  =  "com.example.bluetooth.le.ACTION_FIRST_PRESSURE_SENSOR_DATA";
+    //public final static String ACTION_SECOND_PRESSURE_SENSOR_DATA = "com.example.bluetooth.le.ACTION_SECOND_PRESSURE_SENSOR_DATA";
 
     public final static String ACTION_GATT_SERVICES_DISCOVERED  = "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED";
-    public final static String ACTION_GATT_FIRST_SERVICES_DISCOVERED  = "com.example.bluetooth.le.ACTION_GATT_FIRST_SERVICES_DISCOVERED";
-    public final static String ACTION_GATT_SECOND_SERVICES_DISCOVERED = "com.example.bluetooth.le.ACTION_GATT_SECOND_SERVICES_DISCOVERED";
+    //public final static String ACTION_GATT_FIRST_SERVICES_DISCOVERED  = "com.example.bluetooth.le.ACTION_GATT_FIRST_SERVICES_DISCOVERED";
+    //public final static String ACTION_GATT_SECOND_SERVICES_DISCOVERED = "com.example.bluetooth.le.ACTION_GATT_SECOND_SERVICES_DISCOVERED";
 
     private static HashMap<String, String> attributes = new HashMap();
     public static String CONTROL_SWITCH = "0000fff1-0000-1000-8000-00805f9b34fb";

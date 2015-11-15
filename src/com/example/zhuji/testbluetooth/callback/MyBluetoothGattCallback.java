@@ -96,7 +96,9 @@ public class MyBluetoothGattCallback extends BluetoothGattCallback
         if (action.equals(SampleGattAttributes.ACTION_GATT_CONNECTED))
         {
             if(gatt.getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
-                final Intent intent = new Intent(SampleGattAttributes.ACTION_GATT_FIRST_CONNECTED);
+                final Intent intent = new Intent(SampleGattAttributes.ACTION_GATT_CONNECTED);
+                String[] strings= {gatt.getDevice().getAddress(),"connect"};
+                intent.putExtra(SampleGattAttributes.EXTRA_DATA, strings);
                 service.sendBroadcast(intent);
             }
 
@@ -104,7 +106,9 @@ public class MyBluetoothGattCallback extends BluetoothGattCallback
         else if (action.equals(SampleGattAttributes.ACTION_GATT_DISCONNECTED))
         {
             if(gatt.getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
-                final Intent intent = new Intent(SampleGattAttributes.ACTION_GATT_FIRST_DISCONNECTED);
+                final Intent intent = new Intent(SampleGattAttributes.ACTION_GATT_DISCONNECTED);
+                String[] strings= {gatt.getDevice().getAddress(),"disconnect"};
+                intent.putExtra(SampleGattAttributes.EXTRA_DATA, strings);
                 service.sendBroadcast(intent);
             }
 
@@ -112,7 +116,9 @@ public class MyBluetoothGattCallback extends BluetoothGattCallback
         else if (action.equals(SampleGattAttributes.ACTION_GATT_SERVICES_DISCOVERED))
         {
             if(gatt.getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
-                final Intent intent = new Intent(SampleGattAttributes.ACTION_GATT_FIRST_SERVICES_DISCOVERED);
+                final Intent intent = new Intent(SampleGattAttributes.ACTION_GATT_SERVICES_DISCOVERED);
+                String[] strings= {gatt.getDevice().getAddress(),"service disconnect"};
+                intent.putExtra(SampleGattAttributes.EXTRA_DATA, strings);
                 service.sendBroadcast(intent);
             }
 
@@ -135,7 +141,7 @@ public class MyBluetoothGattCallback extends BluetoothGattCallback
         if (action.equals(SampleGattAttributes.ACTION_GATT_PRESSURE_SENSOR_DATA))
         {
             Log.e("onCharacteristicChanged","UUID_PRESSURE_SENSOR_MEASUREMENT");
-            final Intent intent = new Intent(SampleGattAttributes.ACTION_FIRST_PRESSURE_SENSOR_DATA);
+            final Intent intent = new Intent(SampleGattAttributes.ACTION_GATT_PRESSURE_SENSOR_DATA);
             String[] strings= {gatt.getDevice().getAddress(),stringBuilder.toString()};
             intent.putExtra(SampleGattAttributes.EXTRA_DATA, strings);
             service.sendBroadcast(intent);
@@ -143,8 +149,9 @@ public class MyBluetoothGattCallback extends BluetoothGattCallback
         }
         else if (action.equals(SampleGattAttributes.ACTION_POWER_DATA))
         {
-            final Intent intent = new Intent(SampleGattAttributes.ACTION_FIRST_POWER_DATA);
-            intent.putExtra(SampleGattAttributes.EXTRA_DATA, stringBuilder.toString());
+            final Intent intent = new Intent(SampleGattAttributes.ACTION_POWER_DATA);
+            String[] strings= {gatt.getDevice().getAddress(),stringBuilder.toString()};
+            intent.putExtra(SampleGattAttributes.EXTRA_DATA, strings);
             service.sendBroadcast(intent);
         }
         else if (action.equals(SampleGattAttributes.ACTION_DATA_AVAILABLE))

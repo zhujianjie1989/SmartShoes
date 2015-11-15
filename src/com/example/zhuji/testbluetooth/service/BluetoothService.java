@@ -27,7 +27,7 @@ public class BluetoothService {
     private String TAG = "BluetoothService";
     private int shoes_num = 2;
     
-    private Map<String, BluetoothGattObject> mDevice ;
+    public Map<String, BluetoothGattObject> mDevice ;
     public Context context;
     public BluetoothService(Context context) {
 		this.context = context;
@@ -63,8 +63,13 @@ public class BluetoothService {
     	/*if (mDevice.containsKey(device.getAddress())) {
 			return;
 		}*/
-    	mDevice = null;
-    	mDevice= new HashMap<String, BluetoothGattObject>();
+    	if (mDevice==null) {
+			mDevice= new HashMap<String, BluetoothGattObject>();
+		}
+    	else
+    	{
+    		mDevice.clear();
+    	}
     	Iterator<String> iterator = device.keySet().iterator();
     	while(iterator.hasNext())
     	{
@@ -74,6 +79,18 @@ public class BluetoothService {
             mDevice.put(key, gattObject);
     		
     	}
+        
+    }
+    
+    public void connect(BluetoothDevice device)
+    {
+    
+    	if (mDevice==null) {
+			mDevice= new HashMap<String, BluetoothGattObject>();
+		}
+    	BluetoothGattObject gattObject = new BluetoothGattObject(context);
+    	gattObject.connect(device);
+    	mDevice.put(device.getAddress(), gattObject);
         
     }
 
@@ -178,5 +195,20 @@ public class BluetoothService {
     		gatt.stopGatt();
     	}	
     }
+
+
+	public void DoVibrate(String sideMac) {
+		Iterator<String> iterator = mDevice.keySet().iterator();
+    	while(iterator.hasNext())
+    	{
+    		String key = iterator.next();
+    		if (key.equals(sideMac)) {
+				BluetoothGattObject gatt = mDevice.get(key);
+				gatt.DoVibrate();
+			}
+    		
+    	}	
+		
+	}
 
 }

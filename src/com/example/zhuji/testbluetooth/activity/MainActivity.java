@@ -1,14 +1,17 @@
 package com.example.zhuji.testbluetooth.activity;
 
 import android.R.bool;
+import android.R.string;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -29,6 +32,7 @@ import com.example.zhuji.testbluetooth.util.Util;
 import com.unity3d.player.UnityPlayer;
 import com.unity3d.player.UnityPlayerActivity;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -51,15 +55,26 @@ public class MainActivity  extends UnityPlayerActivity //Activity
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
-			if (msg.arg1 == 2) {
-				
-			/*	shoes.setText(msg.arg2+"");
-				shoes.invalidate();*/
-			}else if (msg.arg1 == 1) {
-           	 Util.BLESHOES_UpdateStep( msg.arg2+"");
-
-				/*step.setText(msg.arg2+"");
-				step.invalidate();*/
+			if (msg.arg1 == 1) 
+			{
+				String string = (String)msg.obj;
+				 Util.BLESHOES_UpdateStep( string);
+			}
+			else if (msg.arg1 == 2)
+			{
+           	
+			}
+			else if (msg.arg1 == 3) 
+			{
+	           	 Util.BLESHOES_UpdatePowerData( msg.obj.toString()+"");
+			}
+			else if (msg.arg1 == 4) 
+			{
+	           	 Util.BLESHOES_GetShoesStatus( msg.obj.toString()+"");
+			}
+			else if (msg.arg1 == 5) 
+			{
+	           	 Util.BLESHOES_UpdateClick( msg.obj.toString()+"");
 			}
 		}
     	
@@ -72,7 +87,7 @@ public class MainActivity  extends UnityPlayerActivity //Activity
     {
         super.onCreate(savedInstanceState);
        // setContentView(R.layout.activity_main);
-       
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏 
         mGattUpdateReceiver = new MyBroadcastReceiver(handler);
         initBluetooth();
       //  initUI();
@@ -157,21 +172,24 @@ public class MainActivity  extends UnityPlayerActivity //Activity
     
     private  void BLESHOES_InitShoes(String leftValue,String rightValue)
     {
-    	initBluetooth();
+    	Util.BLESHOES_UpdateClick("BLESHOES_InitShoes");
+    	bluetoothScanThread = new BluetoothScanThread(this,handler);
+    	bluetoothScanThread.setScanList(leftValue, rightValue);
+    	Util.setScanlist(leftValue, rightValue);
+    	
     }
 
 
 	private  void BLESHOES_ScanShoes()
     {
-		bluetoothScanThread.getBluetoothDevice().clear();
-		bluetoothScanThread = new BluetoothScanThread(this,handler);
+		Util.BLESHOES_UpdateClick("BLESHOES_ScanShoes");
 		bluetoothScanThread.start();
     }
 
 
 	private  void BLESHOES_StartShoes()
     {
-		Util.BLESHOES_UpdateClick("ddddddddddddddddddddd");
+		Util.BLESHOES_UpdateClick("BLESHOES_StartShoes");
 		if (bluetoothScanThread.getBluetoothDevice().size()==0) {
 			return;
 		}
@@ -184,6 +202,7 @@ public class MainActivity  extends UnityPlayerActivity //Activity
 
 	private  void BLESHOES_StopShoes()
     {
+		Util.BLESHOES_UpdateClick("BLESHOES_StopShoes");
 		 if (mBluetoothLeService != null&& mBluetoothLeService.isReady())
 	     {
 	        mBluetoothLeService.stopGatt();
@@ -194,11 +213,24 @@ public class MainActivity  extends UnityPlayerActivity //Activity
 
 	private  void BLESHOES_CloseShoes()
     {
+		Util.BLESHOES_UpdateClick("BLESHOES_CloseShoes");
 		 if (mBluetoothLeService != null&& mBluetoothLeService.isReady())
 	     {
 	        mBluetoothLeService.close();
+	        mBluetoothLeService.mDevice.clear();
 	     }
     }
+	
+	private void BLESHOES_DoVibrate(String side)
+	{
+		Util.BLESHOES_UpdateClick("BLESHOES_DoVibrate");
+		Log.e("BLESHOES_DoVibrate", side);
+		Log.e("BLESHOES_DoVibrate", Util.getSideByMac(side));
+		if (Util.getSideByMac(side)!=null) {
+			mBluetoothLeService.DoVibrate(Util.getSideByMac(side));
+		}
+		
+	}
 
 	public void process() {
 		if (mBluetoothLeService == null) 
@@ -214,6 +246,17 @@ public class MainActivity  extends UnityPlayerActivity //Activity
         }
         Log.e(TAG, "success to initialize Bluetooth");
         mBluetoothLeService.connect(bluetoothScanThread.getBluetoothDevice());  
+		
+	}
+	
+	public void process(BluetoothDevice device) {
+		if (mBluetoothLeService == null) 
+    	{
+    		mBluetoothLeService = new BluetoothService(this);
+		}
+       
+        Log.e(TAG, "success to initialize Bluetooth");
+        mBluetoothLeService.connect(device);  
 		
 	}
    

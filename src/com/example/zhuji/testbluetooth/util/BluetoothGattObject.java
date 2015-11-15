@@ -297,6 +297,22 @@ public class BluetoothGattObject {
 			this.writeCharacteristic(mCharacteristicHeart);
 		}
 	}
+
+	public void DoVibrate() {
+		if (isCharacteristicReady()&&this.isConect()) 
+		{
+
+			mCharacteristicControl.setValue(5, BluetoothGattCharacteristic.FORMAT_UINT8, 0);
+			mCharacteristicControl.setValue(1, BluetoothGattCharacteristic.FORMAT_UINT8, 1);
+			writeCharacteristic(mCharacteristicControl);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	
 	
 
