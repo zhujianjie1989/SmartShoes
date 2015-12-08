@@ -5,11 +5,22 @@ import java.util.Map;
 
 import com.unity3d.player.UnityPlayer;
 
+import android.R.bool;
 import android.content.IntentFilter;
+import android.util.Log;
 
 public class Util {
+	public static boolean debug_switcher = false;
 	public static void reflactCall(String method,String str) {
-		 UnityPlayer.UnitySendMessage("Main Camera",method, str);
+		if (debug_switcher) 
+		{
+			Log.e("reflactCall", method+" "+ str);
+		}
+		else
+		{
+			UnityPlayer.UnitySendMessage("Main Camera",method, str);
+		}
+		 
 	}
 
 	public static IntentFilter makeGattUpdateIntentFilter() {

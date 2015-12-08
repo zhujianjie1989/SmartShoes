@@ -4,6 +4,7 @@ import android.app.Service;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
@@ -44,12 +45,19 @@ public class MyBluetoothGattCallback extends BluetoothGattCallback
     @Override
     public void onServicesDiscovered(BluetoothGatt gatt, int status)
     {
-        Log.e(TAG, "&&&&& onServicesDiscovered");
+        Log.e(TAG, "&&&&& onServicesDiscovered staus = " +status +"  gatt size = "+gatt.getServices().size());
+        
+        for (BluetoothGattService service : gatt.getServices()) {
+        	 Log.e(TAG,"BluetoothGattService "+service.getUuid());
+			for (BluetoothGattCharacteristic cc : service.getCharacteristics()) {
+				 Log.e(TAG,"BluetoothGattCharacteristic "+ cc.getUuid()+"");
+			}
+		}
         if (status == BluetoothGatt.GATT_SUCCESS)
         {
-
            this.gatt.setBluetoothGattCharacteristics();
         }
+        this.gatt.setBluetoothGattCharacteristics();
     }
 
     @Override

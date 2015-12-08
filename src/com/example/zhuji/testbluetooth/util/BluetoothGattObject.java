@@ -244,9 +244,10 @@ public class BluetoothGattObject {
 			return;
 		for (BluetoothGattService gattService : gattServices) {
 			List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
-
+			
 			for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
-
+				Log.e(TAG, "Characteristics uuid = " + gattCharacteristic.getUuid());
+				
 				if (UUID_PRESSURE_SENSOR_MEASUREMENT.equals(gattCharacteristic.getUuid())) {
 					Log.e(TAG, "Characteristics uuid = " + gattCharacteristic.getUuid());
 					mCharacteristicSensor = gattCharacteristic;

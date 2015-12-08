@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity  extends UnityPlayerActivity //Activity
+public class MainActivity  extends Activity//UnityPlayerActivity //Activity
 {
 
    
@@ -86,38 +86,91 @@ public class MainActivity  extends UnityPlayerActivity //Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-       // setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏 
         mGattUpdateReceiver = new MyBroadcastReceiver(handler);
         initBluetooth();
-      //  initUI();
+        initUI();
        /* step = (TextView)findViewById(R.id.TV_step); 
         shoes = (TextView)findViewById(R.id.TV_shoes);*/
         bluetoothScanThread = new BluetoothScanThread(this,handler);
         //bluetoothScanThread.start();
     }
 
-   /* private void initUI()
+    private void initUI()
     {
-        Button button = (Button)findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener()
+    	Util.debug_switcher = true;
+        Button init = (Button)findViewById(R.id.button_init);
+        Button scan = (Button)findViewById(R.id.button_scan);
+        Button start = (Button)findViewById(R.id.button_start);
+        Button stop = (Button)findViewById(R.id.button_stop);
+        Button close = (Button)findViewById(R.id.button_close);
+        Button vibrate_left = (Button)findViewById(R.id.button_viber_left);
+        Button vibrate_right = (Button)findViewById(R.id.button_viber_right);
+        init.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-            	if (bluetoothScanThread.getBluetoothDevice()==null) {
-					return;
-				}
-
-                if (mBluetoothLeService != null)
-                {
-                    mBluetoothLeService.startGatt();
-                    setupAutoHeartBeat();
-                }
+            	BLESHOES_InitShoes("78:C5:E5:6E:D1:0C", "78:C5:E5:6E:D0:E6");
             }
 
         });
-    }*/
+        scan.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+            	BLESHOES_ScanShoes();
+            }
+
+        });
+        start.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+            	BLESHOES_StartShoes();
+            }
+
+        });
+        stop.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+            	BLESHOES_StopShoes();
+            }
+
+        });
+        close.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+            	BLESHOES_CloseShoes();
+            }
+
+        });
+        vibrate_left.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+            	BLESHOES_DoVibrate("LEFT");
+            }
+
+        });
+        vibrate_right.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+            	BLESHOES_DoVibrate("RIGHT");
+            }
+
+        });
+    }
 
 
     private void initBluetooth()

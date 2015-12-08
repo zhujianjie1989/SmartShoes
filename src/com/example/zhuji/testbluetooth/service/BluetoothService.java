@@ -127,7 +127,7 @@ public class BluetoothService {
     		String key = iterator.next();
     		BluetoothGattObject gatt = mDevice.get(key);
     		gatt.startGatt();
-    		setupAutoHeartBeat();
+    		//setupAutoHeartBeat();
     	}
     	
     	

@@ -28,10 +28,46 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/button_init"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button" />
+            android:text="Init" />
+
+        <Button
+            android:id="@+id/button_scan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="scan" />
+
+        <Button
+            android:id="@+id/button_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="start" />
+
+        <Button
+            android:id="@+id/button_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="stop" />
+
+        <Button
+            android:id="@+id/button_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="close" />
+
+        <Button
+            android:id="@+id/button_viber_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="viber left" />
+
+        <Button
+            android:id="@+id/button_viber_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="viber right" />
 
     </LinearLayout>
 
