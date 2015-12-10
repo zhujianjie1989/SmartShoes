@@ -59,6 +59,8 @@ public class MainActivity  extends Activity//UnityPlayerActivity //Activity
 			{
 				String string = (String)msg.obj;
 				 Util.BLESHOES_UpdateStep( string);
+				 TextView textView = (TextView)findViewById(R.id.TV_step);
+	           	 textView.setText("steps:"+string);
 			}
 			else if (msg.arg1 == 2)
 			{
@@ -71,10 +73,20 @@ public class MainActivity  extends Activity//UnityPlayerActivity //Activity
 			else if (msg.arg1 == 4) 
 			{
 	           	 Util.BLESHOES_GetShoesStatus( msg.obj.toString()+"");
+	           	 TextView textView = (TextView)findViewById(R.id.TV_Status);
+	           	 textView.setText("status:"+msg.obj.toString());
 			}
 			else if (msg.arg1 == 5) 
 			{
 	           	 Util.BLESHOES_UpdateClick( msg.obj.toString()+"");
+	           	 TextView textView = (TextView)findViewById(R.id.TV_log);
+	           	 textView.setText("log:"+msg.obj.toString());
+			}
+			else if (msg.arg1 == 6) 
+			{
+	           	 Util.BLESHOES_UpdateStep( "JUMP");
+	           	 TextView textView = (TextView)findViewById(R.id.TV_log);
+	           	 textView.setText("steps:JUMP");
 			}
 		}
     	
@@ -225,18 +237,23 @@ public class MainActivity  extends Activity//UnityPlayerActivity //Activity
     
     private  void BLESHOES_InitShoes(String leftValue,String rightValue)
     {
-    	Util.BLESHOES_UpdateClick("BLESHOES_InitShoes");
-    	bluetoothScanThread = new BluetoothScanThread(this,handler);
-    	bluetoothScanThread.setScanList(leftValue, rightValue);
-    	Util.setScanlist(leftValue, rightValue);
-    	
+    		BLESHOES_CloseShoes();
+    		
+    		Util.BLESHOES_UpdateClick("BLESHOES_InitShoes");
+        	bluetoothScanThread = new BluetoothScanThread(this,handler);
+        	bluetoothScanThread.setScanList(leftValue, rightValue);
+        	Util.setScanlist(leftValue, rightValue);
     }
 
 
 	private  void BLESHOES_ScanShoes()
     {
-		Util.BLESHOES_UpdateClick("BLESHOES_ScanShoes");
-		bluetoothScanThread.start();
+		if(bluetoothScanThread!=null && !bluetoothScanThread.isStarted())
+		{
+			Util.BLESHOES_UpdateClick("BLESHOES_ScanShoes");
+			bluetoothScanThread.start();
+		}
+		
     }
 
 
@@ -247,9 +264,7 @@ public class MainActivity  extends Activity//UnityPlayerActivity //Activity
 			return;
 		}
 
-        mBluetoothLeService.startGatt();
-           
-        
+        mBluetoothLeService.startGatt();  
     }
 
 
@@ -267,6 +282,11 @@ public class MainActivity  extends Activity//UnityPlayerActivity //Activity
 	private  void BLESHOES_CloseShoes()
     {
 		Util.BLESHOES_UpdateClick("BLESHOES_CloseShoes");
+		if (bluetoothScanThread!=null && bluetoothScanThread.isAlive()) 
+		{
+			bluetoothScanThread.stopThread();
+		}
+		
 		 if (mBluetoothLeService != null&& mBluetoothLeService.isReady())
 	     {
 	        mBluetoothLeService.close();

@@ -20,6 +20,7 @@ public class BluetoothScanThread extends Thread {
 	private BluetoothAdapter mBluetoothAdapter;
 	private BluetoothCallback bluetoothCallback;
 	private Handler handler;
+	private boolean stop_flag = false;
 	public  BluetoothScanThread(Context  context,Handler handler) 
 	{
 		this.context = context;
@@ -31,7 +32,7 @@ public class BluetoothScanThread extends Thread {
 	@Override
 	public void run() 
 	{
-		while (bluetoothCallback.isStop()) 
+		while (bluetoothCallback.isStop()&& !stop_flag) 
 		{
 			try 
 			{
@@ -91,5 +92,15 @@ public class BluetoothScanThread extends Thread {
 	 {
 		 return bluetoothCallback.getSideMac(side);
 	 }
+	 
+	 public boolean isStarted()
+	 {
+		 return bluetoothCallback.devices.size()!=0||this.isAlive()? true:false;
+	 }
+	 
+	 public void stopThread()
+	 {
+		 stop_flag = true;
+	 } 
 
 }

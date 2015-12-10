@@ -65,6 +65,7 @@ public class Util {
 	public static Map<String,String> scanlist = new HashMap<String,String>();
 	public static void setScanlist(String left,String right)
 	{
+		scanlist.clear();
 		scanlist.put("LEFT", left);
     	scanlist.put("RIGHT", right);
     	scanlist.put( left,"LEFT");

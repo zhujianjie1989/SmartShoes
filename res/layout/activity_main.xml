@@ -14,17 +14,24 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/TV_shoes"
+            android:id="@+id/TV_log"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Large Text"
+            android:text="log:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/TV_Status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="status:"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/TV_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Large Text"
+            android:text="log:"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Button

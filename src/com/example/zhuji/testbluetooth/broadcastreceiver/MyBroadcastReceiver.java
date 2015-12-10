@@ -124,7 +124,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver{
     private Map<String, int[]> sensorDataMap = new HashMap<String, int[]>();
     private Map<String, status> sensorStatuMap = new HashMap<String, status>();
     public int step_count =0;
-    public enum status{STEP_DOWN,STEP_UP};
+    public enum status{STEP_DOWN,STEP_UP,STEP_JUMP_UP,STEP_JUMP_DOWN};
     
     private void displayPressureSensorData(String[] data) {
         String subdata;
@@ -221,12 +221,35 @@ public class MyBroadcastReceiver extends BroadcastReceiver{
             	int [] sdata = sensorDataMap.get(key);
             	arg += Util.getSideByMac(key) +":"+"up = " + sdata[0]+ " left = " + sdata[1]+" right = " + sdata[2]+" back = " + sdata[3] +"\n";
             }
-            
-            
             Message msg = new Message();
 	       	msg.arg1=5;
 	        msg.obj=arg;
 	       	handler.sendMessage(msg);
+            
+            /*Iterator<String> status_keys = sensorStatuMap.keySet().iterator();
+            while(status_keys.hasNext())
+            {
+            	String key = status_keys.next();
+            	
+            	status st = sensorStatuMap.get(key);
+            	if (st != status.STEP_UP) 
+            	{
+					return;
+				}
+            	
+            } 
+            status_keys = sensorStatuMap.keySet().iterator();
+            while(status_keys.hasNext())
+            {
+            	String key = status_keys.next();
+            	status st = sensorStatuMap.get(key);
+            	st = status.STEP_JUMP_UP;
+            } 
+            msg = new Message();
+	       	msg.arg1=6;
+	        msg.obj=arg;
+	       //	handler.sendMessage(msg);
+*/           
            
         }
         
